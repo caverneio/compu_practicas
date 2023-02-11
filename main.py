@@ -54,5 +54,3 @@ def update_data():
         
         print(f'Page {page} processed')
         page += 1
-
-update_data()
