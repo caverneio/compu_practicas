@@ -24,7 +24,7 @@ def getDataFromCard(job_element):
     title = job_element.find("h1").find("a").text
     [company, location] = getCompanyLocation(job_element.find("p", class_="fs16 fc_base mt5 mb5"))
     publishedAt = parsePublicationDate(job_element.find("p", class_="fs13 fc_aux").text)
-    detail = getJobDetail(id, title)
+    [detail, detailHTML] = getJobDetail(id)
 
     return {
         "id": id,
@@ -32,5 +32,6 @@ def getDataFromCard(job_element):
         "company": company,
         "location": location,
         "publishedAt": publishedAt.isoformat() + 'Z',
-        "detail": detail
+        "detail": detail,
+        "detailHTML": detailHTML
     }

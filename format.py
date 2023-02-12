@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 
 from constants import DETAIL_URL, HEADERS
 
-def getJobDetail(id):
+def formatData(id):
     payload = {"oi":id}
     response = requests.request("POST", DETAIL_URL, headers=HEADERS, data=payload)
     soup = BeautifulSoup(response.content, "html.parser")
@@ -49,3 +49,6 @@ def getJobDetail(id):
     detailHTML = str(parsedHTML)
 
     return [detail, detailHTML]
+    
+    
+
