@@ -102,50 +102,61 @@ def remove_before_regex(text, keyword_regex, start_from="end"):
         result = re.sub(rf"^.*?(?={keyword_regex})", '', text, flags=re.DOTALL|re.MULTILINE)
     return result
 
-def parsePublicationDate(text):
+def parsePublicationDate(text0):
     current_date = datetime.datetime.now()
     hours = 0
-    if text == "Ayer":
-        hours = 24
+    
+    text = text0.replace(" (actualizada)", "").strip()
+    
+    
+    date = None
+    
+    if text == "Hace más de 30 días":
+        return None
+    
+    elif "Ayer" in text:
+        date = current_date - datetime.timedelta(days=1)
 
     elif "Hace" in text:
         try:
             minutes = int(re.sub(r"Hace (\d+) minuto[s]?", r"\1", text))
-            return current_date - datetime.timedelta(minutes=minutes)
+            date = current_date - datetime.timedelta(minutes=minutes)
 
         except:
             try:
                 hours = int(re.sub(r"Hace (\d+) hora[s]?", r"\1", text))
-                return current_date - datetime.timedelta(hours=hours)
+                date =  current_date - datetime.timedelta(hours=hours)
             
             except:
                 try:
                     days = int(re.sub(r"Hace (\d+) día[s]?", r"\1", text))
-                    return current_date - datetime.timedelta(days=days)
+                    date =  current_date - datetime.timedelta(days=days)
                 except:
                     print(text)
-                    print("Incorrect date format")
+                    print("Incorrect date format1")
                     return None
 
     else:
         try:
             # Split the date string into day and month
-            day, month_string = text.split(" de ")
+            [day, month_string] = text.split(" de ")
+            
             day = int(day)
             month = SPANISH_MONTS[month_string.lower()]
 
             # Create a datetime object using the year, month, and day
-            date_object = datetime.datetime(year=datetime.datetime.now().year, month=month, day=day)
-            return date_object
-        except (ValueError, KeyError):
+            date = datetime.datetime(year=datetime.datetime.now().year, month=month, day=day)
+            
+        except:
             print(text)
-            print("Incorrect date format")
+            print("Incorrect date format2")
             return None
 
     #get the current date
 
     #subtract the number of hours
-    date = current_date - datetime.timedelta(hours=hours)
+    date =  date + datetime.timedelta(hours=5)
+    date = (date.isoformat() + 'Z') if (date is not None) else None
 
     #return the date
     return date
