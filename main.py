@@ -34,6 +34,11 @@ def update_data():
                 print(f'Job {id} already exists in database')
                 continue
             
+            record = dbClient.get_by_id('AlertedJobsOffers', id=id)
+            if record is not None:
+                print(f'Job {id} alerted')
+                continue
+            
             
             del data["isPracticas"]
             
